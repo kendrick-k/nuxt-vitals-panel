@@ -1,5 +1,12 @@
 # nuxt-vitals-panel
 
+[![npm version](https://img.shields.io/npm/v/nuxt-vitals-panel?color=2f6f3e&label=npm)](https://www.npmjs.com/package/nuxt-vitals-panel)
+[![npm downloads](https://img.shields.io/npm/dm/nuxt-vitals-panel?color=2f6f3e)](https://www.npmjs.com/package/nuxt-vitals-panel)
+[![CI](https://img.shields.io/github/actions/workflow/status/kendrick-k/nuxt-vitals-panel/ci.yml?branch=main&label=CI)](https://github.com/kendrick-k/nuxt-vitals-panel/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/npm/l/nuxt-vitals-panel?color=2f6f3e)](https://github.com/kendrick-k/nuxt-vitals-panel/blob/main/LICENSE)
+[![Nuxt](https://img.shields.io/badge/Nuxt-4-00DC82?logo=nuxt&logoColor=white)](https://nuxt.com)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+
 A small flame button on the edge of your Nuxt page. Click it to open a live **Core Web Vitals** panel (LCP, FCP, CLS, INP, TTFB), copy a JSON report, and ship it to production for admins only.
 
 ![The panel open, with the flame button on the right edge: LCP, FCP, CLS, INP and TTFB with green dots, then requests, long tasks and JS memory](https://raw.githubusercontent.com/kendrick-k/nuxt-vitals-panel/main/docs/panel.png)

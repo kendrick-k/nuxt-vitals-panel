@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { rateVital, formatVital, shouldShowPanel, panelNotes, buildReport } from '../src/runtime/utils.ts'
+import { rateVital, formatVital, shouldShowPanel, overallRating, panelNotes, buildReport } from '../src/runtime/utils.ts'
 
 test('rateVital follows the web.dev thresholds', () => {
   assert.equal(rateVital('LCP', 2500), 'good')
@@ -41,4 +41,11 @@ test('buildReport returns serialisable values, ratings and extras', () => {
   assert.equal(r.vitals.CLS.value, 0.0123)
   assert.deepEqual(r.other, { requests: 30, transferKb: 12, longTasks: 2, heapMb: null })
   assert.doesNotThrow(() => JSON.stringify(r))
+})
+
+test('overallRating = worst measured rating', () => {
+  assert.equal(overallRating({}), null)
+  assert.equal(overallRating({ LCP: 1000, CLS: 0.01 }), 'good')
+  assert.equal(overallRating({ LCP: 1000, INP: 300 }), 'needs-improvement')
+  assert.equal(overallRating({ LCP: 5000, INP: 100, FCP: null }), 'poor')
 })

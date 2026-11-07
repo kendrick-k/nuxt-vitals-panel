@@ -23,6 +23,17 @@ export function formatVital(name: VitalName, value: number | null | undefined): 
   return value >= 1000 ? `${(value / 1000).toFixed(2)} s` : `${Math.round(value)} ms`
 }
 
+/** Worst rating among the measured vitals (null when nothing is measured yet). Drives the flame colour. */
+export function overallRating(values: Partial<Record<VitalName, number | null>>): VitalRating | null {
+  const order: VitalRating[] = ['good', 'needs-improvement', 'poor']
+  let worst = -1
+  for (const n of ['LCP', 'FCP', 'CLS', 'INP', 'TTFB'] as VitalName[]) {
+    const r = rateVital(n, values[n])
+    if (r) worst = Math.max(worst, order.indexOf(r))
+  }
+  return worst < 0 ? null : order[worst]!
+}
+
 /** The panel is shown in development, and in production only when the app allows it (for example admins). */
 export function shouldShowPanel(opts: { dev: boolean, allow?: boolean }): boolean {
   return opts.dev || !!opts.allow

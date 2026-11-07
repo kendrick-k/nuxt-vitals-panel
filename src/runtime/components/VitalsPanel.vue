@@ -3,7 +3,7 @@
 // Shown in development; in production only when `allow` is true (pass an admin flag).
 import { computed, onMounted, ref, useRuntimeConfig, watch } from '#imports'
 import { useVitals } from '../composables/useVitals'
-import { buildReport, formatVital, panelNotes, rateVital, shouldShowPanel } from '../utils'
+import { buildReport, formatVital, overallRating, panelNotes, rateVital, shouldShowPanel } from '../utils'
 
 const props = withDefaults(defineProps<{ allow?: boolean, position?: 'right' | 'left' }>(), { allow: false, position: undefined })
 const config = useRuntimeConfig().public.vitalsPanel as { position?: 'right' | 'left' } | undefined
@@ -41,6 +41,10 @@ const rows = [
   { key: 'TTFB', hint: 'Server response' },
 ] as const
 const dot: Record<string, string> = { 'good': 'bg-emerald-400', 'needs-improvement': 'bg-amber-400', 'poor': 'bg-red-500' }
+const overall = computed(() => overallRating(vitals.value))
+const flame: Record<string, string> = { 'good': 'text-emerald-400', 'needs-improvement': 'text-amber-400', 'poor': 'text-red-500' }
+const flameClass = computed(() => flame[overall.value || ''] || 'text-white/60')
+const scoreLabel = computed(() => overall.value === 'good' ? 'good' : overall.value === 'poor' ? 'poor' : overall.value ? 'needs improvement' : 'measuring')
 const copyLabel = computed(() => copied.value === 'ok' ? 'Copied' : copied.value === 'error' ? 'Copy failed' : 'Copy report')
 </script>
 
@@ -49,7 +53,7 @@ const copyLabel = computed(() => copied.value === 'ok' ? 'Copied' : copied.value
     <section v-if="open" id="vitals-panel" class="w-72 rounded-2xl bg-gray-900/95 p-4 text-white shadow-2xl ring-1 ring-white/10 backdrop-blur" :class="side === 'right' ? 'mr-2' : 'ml-2'" aria-label="Web vitals">
       <header class="flex items-center justify-between gap-2">
         <h2 class="flex items-center gap-2 whitespace-nowrap text-sm font-semibold">
-          <svg class="size-4 text-orange-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" /></svg>
+          <svg class="size-4" :class="flameClass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" /></svg>
           Web vitals
         </h2>
         <span class="flex items-center gap-1">
@@ -81,7 +85,7 @@ const copyLabel = computed(() => copied.value === 'ok' ? 'Copied' : copied.value
         <li v-for="n in notes" :key="n">{{ n }}</li>
       </ul>
     </section>
-    <button type="button" class="flex size-10 cursor-pointer items-center justify-center bg-gray-900 text-orange-400 shadow-2xl ring-1 ring-white/10 hover:text-orange-300" :class="side === 'right' ? 'rounded-l-full' : 'rounded-r-full'" :aria-expanded="open" aria-controls="vitals-panel" :aria-label="open ? 'Close web vitals' : 'Open web vitals'" @click="toggle">
+    <button type="button" class="flex size-10 cursor-pointer items-center justify-center bg-gray-900 shadow-2xl ring-1 ring-white/10 hover:brightness-125" :class="[flameClass, side === 'right' ? 'rounded-l-full' : 'rounded-r-full']" :aria-expanded="open" aria-controls="vitals-panel" :aria-label="(open ? 'Close web vitals' : 'Open web vitals') + ' (' + scoreLabel + ')'" :title="'Web vitals: ' + scoreLabel" @click="toggle">
       <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" /></svg>
     </button>
   </div>

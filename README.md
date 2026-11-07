@@ -2,6 +2,10 @@
 
 A small flame button on the edge of your Nuxt page. Click it to open a live **Core Web Vitals** panel (LCP, FCP, CLS, INP, TTFB), copy a JSON report, and ship it to production for admins only.
 
+![The panel open, with the flame button on the right edge: LCP, FCP, CLS, INP and TTFB with green dots, then requests, long tasks and JS memory](https://raw.githubusercontent.com/kendrick-k/nuxt-vitals-panel/main/docs/panel.png)
+
+The flame is green when every metric is good, amber when the worst one needs improvement, red when any is poor, and grey while nothing is measured yet.
+
 - Measures with Google's [`web-vitals`](https://github.com/GoogleChrome/web-vitals) library, so LCP, CLS and INP are computed the way Google does.
 - Shows requests, transferred size, long tasks and JS memory.
 - Warns when the numbers can't be trusted (page loaded in a background tab, development mode). Warnings stay behind a button until you click it.
